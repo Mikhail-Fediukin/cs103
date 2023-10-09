@@ -1,5 +1,4 @@
 import dataclasses
-import time
 import typing as tp
 
 from vkapi import config
@@ -15,7 +14,10 @@ class FriendsResponse:
 
 
 def get_friends(
-    user_id: int, count: int = 5000, offset: int = 0, fields: tp.Optional[tp.List[str]] = None
+    user_id: int,
+    count: int = 5000,
+    offset: int = 0,
+    fields: tp.Optional[tp.List[str]] = None,
 ) -> FriendsResponse:
     """
     Получить список идентификаторов друзей пользователя или расширенную информацию
@@ -62,7 +64,6 @@ def get_mutual(
     order: str = "",
     count: tp.Optional[int] = None,
     offset: int = 0,
-    progress=None,
 ) -> tp.Union[tp.List[int], tp.List[MutualFriends]]:
     """
     Получить список идентификаторов общих друзей между парой пользователей.
@@ -73,7 +74,6 @@ def get_mutual(
     :param order: Порядок, в котором нужно вернуть список общих друзей.
     :param count: Количество общих друзей, которое нужно вернуть.
     :param offset: Смещение, необходимое для выборки определенного подмножества общих друзей.
-    :param progress: Callback для отображения прогресса.
     """
     start = Session(config.VK_CONFIG["domain"])
     all_friends = []

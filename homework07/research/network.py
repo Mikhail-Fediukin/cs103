@@ -1,10 +1,11 @@
 import typing as tp
-import community as community_louvain
-import matplotlib.pyplot as plt
-import networkx as nx
-import pandas as pd
 from collections import defaultdict
-from vkapi.friends import MutualFriends, get_mutual, get_friends
+
+import community as community_louvain  # type: ignore
+import matplotlib.pyplot as plt  # type: ignore
+import networkx as nx  # type: ignore
+import pandas as pd  # type: ignore
+from vkapi.friends import MutualFriends, get_friends, get_mutual
 
 
 def ego_network(
@@ -18,9 +19,14 @@ def ego_network(
     """
     graph = []
     if not friends:
-        friends_fields: tp.List[tp.Dict[str, tp.Any]] = get_friends(user_id, fields=["nickname",
-                                                                                     "is_closed, deactivate"]).items
-        friends = [friend["id"] for friend in friends_fields if not (friend.get("deactivate") or friend.get("is_closed"))]
+        friends_fields: tp.List[tp.Dict[str, tp.Any]] = get_friends(  # type: ignore
+            user_id, fields=["nickname", "is_closed, deactivate"]  # type: ignore
+        ).items
+        friends = [
+            friend["id"]
+            for friend in friends_fields
+            if not (friend.get("deactivate") or friend.get("is_closed"))
+        ]
     mutuals = get_mutual(user_id, target_uids=friends)
     for mutual in mutuals:
         mutual_m = tp.cast(MutualFriends, mutual)
