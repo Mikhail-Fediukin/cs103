@@ -1,12 +1,10 @@
 import typing as tp
-from collections import defaultdict
-
 import community as community_louvain
 import matplotlib.pyplot as plt
 import networkx as nx
 import pandas as pd
-
-from vkapi.friends import get_friends, get_mutual
+from collections import defaultdict
+from vkapi.friends import MutualFriends, get_mutual, get_friends
 
 
 def ego_network(
@@ -18,7 +16,17 @@ def ego_network(
     :param user_id: Идентификатор пользователя, для которого строится граф друзей.
     :param friends: Идентификаторы друзей, между которыми устанавливаются связи.
     """
-    pass
+    graph = []
+    if not friends:
+        friends_fields: tp.List[tp.Dict[str, tp.Any]] = get_friends(user_id, fields=["nickname",
+                                                                                     "is_closed, deactivate"]).items
+        friends = [friend["id"] for friend in friends_fields if not (friend.get("deactivate") or friend.get("is_closed"))]
+    mutuals = get_mutual(user_id, target_uids=friends)
+    for mutual in mutuals:
+        mutual_m = tp.cast(MutualFriends, mutual)
+        for common in mutual_m["common_friends"]:
+            graph.append((mutual_m["id"], common))
+    return graph
 
 
 def plot_ego_network(net: tp.List[tp.Tuple[int, int]]) -> None:
@@ -63,6 +71,10 @@ def describe_communities(
         for uid in cluster_users:
             for friend in friends:
                 if uid == friend["id"]:
-                    data.append([cluster_n] + [friend.get(field) for field in fields])  # type: ignore
+                    data.append([cluster_n] + [friend.get(field) for field in fields])
                     break
     return pd.DataFrame(data=data, columns=["cluster"] + fields)
+
+
+d = ego_network(178052017)
+plot_ego_network(d)
