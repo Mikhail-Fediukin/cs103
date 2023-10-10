@@ -295,18 +295,9 @@ def clear_subject_list(message):
     start(message)
 
 
-@bot.message_handler(commands=["start"])
-def greetings(message):
-    bot.send_message(
-        message.chat.id,
-        "Решительно приветствую!\nСо мной ты достигнешь всех намеченных целей!",
-    )
-    start(message)
-
-
 def is_valid_date(date: str, divider: str) -> bool:
     try:
-        datetime.strptime(date, '%d/%m/%Y') or datetime.strptime(date, '%d.%m.%Y')
+        datetime.strptime(date, "%d/%m/%Y") or datetime.strptime(date, "%d.%m.%Y")
         return True
     except ValueError:
         return False
@@ -314,6 +305,15 @@ def is_valid_date(date: str, divider: str) -> bool:
 
 def is_valid_url(url: str = "") -> bool:
     return validators.url(url)
+
+
+@bot.message_handler(commands=["start"])
+def greetings(message):
+    bot.send_message(
+        message.chat.id,
+        "Решительно приветствую!\nСо мной ты достигнешь всех намеченных целей!",
+    )
+    start(message)
 
 
 ROW, COL = None, None
