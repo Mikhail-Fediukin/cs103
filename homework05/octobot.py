@@ -126,12 +126,12 @@ def choose_subject_action(message):
     elif message.text == "Удалить дисциплину":
         choose_subject(message)
 
-    elif message.text == "Удалить все дисциплины":
+    """elif message.text == "Удалить все дисциплины":
         markup = telebot.types.ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=True)
         markup.row("Да, удалить ВСЕ")
         markup.row("Нет, вернуться")
         info = bot.send_message(message.chat.id, "Точно удалить ВСЕ?", reply_markup=markup)
-        bot.register_next_step_handler(info, choose_removal_option)
+        bot.register_next_step_handler(info, choose_removal_option)"""
 
 
 def choose_deadline_action(message, action):
