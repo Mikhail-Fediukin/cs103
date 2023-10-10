@@ -1,6 +1,7 @@
 import json
 from datetime import datetime
 
+import re
 import gspread  # type: ignore
 import pandas as pd
 import telebot  # type: ignore
@@ -41,7 +42,7 @@ def access_current_sheet():
 
 
 def convert_date(date):
-    the_day = date.split("/")
+    the_day = re.split(r'[,./!_-]', date)
     return datetime(int(the_day[2]), int(the_day[1]), int(the_day[0]))
 
 
@@ -297,8 +298,8 @@ def clear_subject_list(message):
 
 def is_valid_date(date: str, divider: str) -> bool:
     try:
-        datetime.strptime(date, "%d/%m/%Y") or datetime.strptime(date, "%d.%m.%Y")
-        return True
+        the_day = re.split(r'[,./!_-]', date)
+        datetime(int(the_day[2]), int(the_day[1]), int(the_day[0]))
     except ValueError:
         return False
 
