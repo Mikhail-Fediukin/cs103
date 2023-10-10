@@ -186,7 +186,10 @@ def update_subject_deadline(message, action):
             parse_mode="HTML",
         )
     elif action == "Редактировать дедлайн":
-        info = bot.send_message(message.chat.id, "Работа не найдена. Попробуй еще раз",)
+        info = bot.send_message(
+            message.chat.id,
+            "Работа не найдена. Попробуй еще раз",
+        )
         bot.register_next_step_handler(info, update_subject_deadline, action)
         return
     else:
@@ -231,7 +234,7 @@ def update_subject_url(message):
 
 def update_cell_data(message, action):
     if action == "Введи новую ссылку" or action == "Cсылка не работает:(\nПопробуй еще раз.":
-        text = ("https://" + message.text if (len(message.text) > 3 and message.text[:4] == "www.") else message.text)
+        text = "https://" + message.text if (len(message.text) > 3 and message.text[:4] == "www.") else message.text
         if not validators.url(text):
             info = bot.send_message(message.chat.id, "Cсылка не работает:(\nПопробуй еще раз.")
             bot.register_next_step_handler(info, update_cell_data, info.text)
