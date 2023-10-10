@@ -299,7 +299,7 @@ def clear_subject_list(message):
 def is_valid_date(date: str, divider: str) -> bool:
     try:
         the_day = re.split(r"[,./!_-]", date)
-        datetime(int(the_day[2]), int(the_day[1]), int(the_day[0]))
+        return datetime(int(the_day[2]), int(the_day[1]), int(the_day[0]))
     except ValueError:
         return False
 
