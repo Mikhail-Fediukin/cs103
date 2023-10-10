@@ -46,9 +46,7 @@ def convert_date(date):
 
 
 def start(message):
-    start_markup = telebot.types.ReplyKeyboardMarkup(
-        resize_keyboard=True, one_time_keyboard=True
-    )
+    start_markup = telebot.types.ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=True)
     if not access_current_sheet():
         start_markup.row("Подключить Google-таблицу")
     else:
@@ -57,9 +55,7 @@ def start(message):
         start_markup.row("Редактировать таблицу")
         start_markup.row("That will be all")
 
-    info = bot.send_message(
-        message.chat.id, "Выбери действие:", reply_markup=start_markup
-    )
+    info = bot.send_message(message.chat.id, "Выбери действие:", reply_markup=start_markup)
     bot.register_next_step_handler(info, choose_action)
 
 
@@ -94,9 +90,7 @@ def choose_action(message):
         start(message)
 
     elif message.text == "Редактировать дедлайны":
-        markup = telebot.types.ReplyKeyboardMarkup(
-            resize_keyboard=True, one_time_keyboard=True
-        )
+        markup = telebot.types.ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=True)
         markup.row("Добавить новый дедлайн")
         markup.row("Редактировать существующий дедлайн")
         markup.row("Вернуться в начало")
@@ -104,9 +98,7 @@ def choose_action(message):
         bot.register_next_step_handler(message, choose_subject)
 
     elif message.text == "Редактировать таблицу":
-        markup = telebot.types.ReplyKeyboardMarkup(
-            resize_keyboard=True, one_time_keyboard=True
-        )
+        markup = telebot.types.ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=True)
         markup.row("Добавить новую дисциплину")
         markup.row("Изменить информацию о дисциплине")
         markup.row("Удалить дисциплину")
@@ -121,15 +113,11 @@ def choose_subject_action(message):
         start(message)
 
     elif message.text == "Добавить новую дисциплину":
-        info = bot.send_message(
-            message.chat.id, "Введи название дисциплины, которую желаешь добавить"
-        )
+        info = bot.send_message(message.chat.id, "Введи название дисциплины, которую желаешь добавить")
         bot.register_next_step_handler(info, add_new_subject)
 
     elif message.text == "Изменить информацию о дисциплине":
-        markup = telebot.types.ReplyKeyboardMarkup(
-            resize_keyboard=True, one_time_keyboard=True
-        )
+        markup = telebot.types.ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=True)
         markup.row("Изменить название дисциплины")
         markup.row("Изменить ссылку на таблицу с баллами по дисциплине")
         info = bot.send_message(message.chat.id, "Выбери действие", reply_markup=markup)
@@ -139,14 +127,10 @@ def choose_subject_action(message):
         choose_subject(message)
 
     elif message.text == "Удалить все дисциплины":
-        markup = telebot.types.ReplyKeyboardMarkup(
-            resize_keyboard=True, one_time_keyboard=True
-        )
+        markup = telebot.types.ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=True)
         markup.row("Да, удалить ВСЕ")
         markup.row("Нет, вернуться")
-        info = bot.send_message(
-            message.chat.id, "Точно удалить ВСЕ?", reply_markup=markup
-        )
+        info = bot.send_message(message.chat.id, "Точно удалить ВСЕ?", reply_markup=markup)
         bot.register_next_step_handler(info, choose_removal_option)
 
 
@@ -162,25 +146,18 @@ def choose_subject(message):
     if message.text == "Вернуться в начало":
         start(message)
     else:
-        markup = telebot.types.ReplyKeyboardMarkup(
-            resize_keyboard=True, one_time_keyboard=True
-        )
+        markup = telebot.types.ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=True)
         data = access_current_sheet()
         for i in range(data[2].shape[0]):
             markup.row(data[2].at[i, "Subject"])
-        info = bot.send_message(
-            message.chat.id, "Выбери дисциплину", reply_markup=markup
-        )
+        info = bot.send_message(message.chat.id, "Выбери дисциплину", reply_markup=markup)
         if message.text == "Изменить название дисциплины":
             bot.register_next_step_handler(info, update_subject_title)
         elif message.text == "Изменить ссылку на таблицу с баллами по дисциплине":
             bot.register_next_step_handler(info, update_subject_url)
         elif message.text == "Удалить дисциплину":
             bot.register_next_step_handler(info, delete_subject)
-        elif (
-            message.text == "Добавить новый дедлайн"
-            or message.text == "Редактировать существующий дедлайн"
-        ):
+        elif message.text == "Добавить новый дедлайн" or message.text == "Редактировать существующий дедлайн":
             bot.register_next_step_handler(info, choose_deadline_action, message.text)
 
 
@@ -205,43 +182,29 @@ def update_subject_deadline(message, action):
     if cur_date:
         info = bot.send_message(
             message.chat.id,
-            f"Дедлайн данной работы: <b>{ cur_date }</b>."
-            f"\nВведи новую дату дедлайна в формате\nDD/MM/YYYY",
+            f"Дедлайн данной работы: <b>{ cur_date }</b>." f"\nВведи новую дату дедлайна в формате\nDD/MM/YYYY",
             parse_mode="HTML",
         )
     elif action == "Редактировать дедлайн":
-        info = bot.send_message(
-            message.chat.id,
-            "Работа не найдена. Попробуй еще раз",
-        )
+        info = bot.send_message(message.chat.id, "Работа не найдена. Попробуй еще раз",)
         bot.register_next_step_handler(info, update_subject_deadline, action)
         return
     else:
-        info = bot.send_message(
-            message.chat.id, "Введи дату дедлайна в формате\nDD/MM/YYYY"
-        )
+        info = bot.send_message(message.chat.id, "Введи дату дедлайна в формате\nDD/MM/YYYY")
     COL += int(message.text) + 1
     bot.register_next_step_handler(info, update_cell_datetime)
 
 
 def add_new_subject(message):
     access_current_sheet()[0].append_row([message.text])
-    info = bot.send_message(
-        message.chat.id, "Введи ссылку на таблицу с баллами по данной дисциплине"
-    )
+    info = bot.send_message(message.chat.id, "Введи ссылку на таблицу с баллами по данной дисциплине")
     bot.register_next_step_handler(info, add_new_subject_url)
 
 
 def add_new_subject_url(message):
-    text = (
-        "https:///" + message.text
-        if (len(message.text) > 3 and message.text[:4] == "www.")
-        else message.text
-    )
+    text = "https:///" + message.text if (len(message.text) > 3 and message.text[:4] == "www.") else message.text
     if not validators.url(text):
-        new = bot.send_message(
-            message.chat.id, "Cсылка не работает:(\nПопробуй еще раз."
-        )
+        new = bot.send_message(message.chat.id, "Cсылка не работает:(\nПопробуй еще раз.")
         bot.register_next_step_handler(new, add_new_subject_url)
         return
     data = access_current_sheet()
@@ -267,20 +230,11 @@ def update_subject_url(message):
 
 
 def update_cell_data(message, action):
-    if (
-        action == "Введи новую ссылку"
-        or action == "Cсылка не работает:(\nПопробуй еще раз."
-    ):
-        text = (
-            "https://" + message.text
-            if (len(message.text) > 3 and message.text[:4] == "www.")
-            else message.text
-        )
+    if action == "Введи новую ссылку" or action == "Cсылка не работает:(\nПопробуй еще раз.":
+        text = ("https://" + message.text if (len(message.text) > 3 and message.text[:4] == "www.") else message.text)
         if not validators.url(text):
-            new = bot.send_message(
-                message.chat.id, "Cсылка не работает:(\nПопробуй еще раз."
-            )
-            bot.register_next_step_handler(new, update_cell_data, new.text)
+            info = bot.send_message(message.chat.id, "Cсылка не работает:(\nПопробуй еще раз.")
+            bot.register_next_step_handler(info, update_cell_data, info.text)
             return
         message.text = text
     global ROW, COL
@@ -297,8 +251,7 @@ def update_cell_datetime(message):
         if on_sometime.days // 365 > 2 or date < today:
             info = bot.send_message(
                 message.chat.id,
-                "Дедлайн вносится максимум на ближайшие 2 года от настоящего момента."
-                "\nПопробуй ещё раз",
+                "Дедлайн вносится максимум на ближайшие 2 года от настоящего момента.\nПопробуй ещё раз",
             )
             bot.register_next_step_handler(info, update_cell_datetime)
             return
@@ -335,9 +288,7 @@ def choose_removal_option(message):
 
 def clear_subject_list(message):
     access_current_sheet()[0].clear()
-    bot.send_message(
-        message.chat.id, "Готово! Кажется, это начало новой жизни без долгов."
-    )
+    bot.send_message(message.chat.id, "Готово! Кажется, это начало новой жизни без долгов.")
     start(message)
 
 
