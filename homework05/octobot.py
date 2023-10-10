@@ -304,5 +304,17 @@ def greetings(message):
     start(message)
 
 
+def is_valid_date(date: str, divider: str) -> bool:
+    try:
+        datetime.strptime(date, '%d/%m/%Y') or datetime.strptime(date, '%d.%m.%Y')
+        return True
+    except ValueError:
+        return False
+
+
+def is_valid_url(url: str = "") -> bool:
+    return validators.url(url)
+
+
 ROW, COL = None, None
 bot.infinity_polling()
